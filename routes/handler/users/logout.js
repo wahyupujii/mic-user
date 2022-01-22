@@ -19,7 +19,7 @@ module.exports = async (req, res) => {
         })
     }
 
-    const user = Users.findOne({ where: {id: req.body.user_id} })
+    const user = await Users.findOne({ where: {id: req.body.user_id} })
 
     if (!user) {
         return res.status(404).json({
@@ -27,7 +27,9 @@ module.exports = async (req, res) => {
             message: "user not found"
         })
     }
-
+    
+    // untuk pengaturan jika logout lewat api-gateway, 
+    // karena di login api-gateway ada pengaturan post refresh-token
     await RefreshTokens.destroy({ where: {user_id: req.body.user_id} })
 
     return res.status(200).json({
